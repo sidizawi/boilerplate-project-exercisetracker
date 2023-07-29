@@ -35,6 +35,23 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
+app.get('/api/users', (req, res) => {
+  User
+    .find()
+    .then((data) => {
+      if (data) {
+        res.json(
+          data.map((user) => {
+            return {
+              username: user.username,
+              _id: user['_id']
+            }
+          }
+        ))
+      }
+    })
+})
+
 app.post('/api/users', (req, res) => {
   const { username } = req.body;
 
@@ -79,14 +96,12 @@ app.post('/api/users/:_id/exercises', (req, res) => {
   }).then((data) => {
     if (data) {
       res.json({
+        '_id': data['_id'],
         username: data.username,
-        description,
-        duration,
         date: exerciseDate.toDateString(),
-        '_id': data['_id']
+        duration,
+        description,
       })
-    } else {
-      res.json({'error': 'Invalid Data'})
     }
   })
 })
