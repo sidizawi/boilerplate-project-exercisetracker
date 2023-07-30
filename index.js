@@ -74,8 +74,10 @@ app.post('/api/users', (req, res) => {
 })
 
 app.post('/api/users/:_id/exercises', (req, res) => {
-  const { description, duration, date } = req.body;
+  let { description, duration, date } = req.body;
 
+  duration = parseInt(duration);
+  
   let exerciseDate = new Date(date);
   if (exerciseDate == 'Invalid Date') {
     exerciseDate = new Date();
@@ -96,11 +98,11 @@ app.post('/api/users/:_id/exercises', (req, res) => {
   }).then((data) => {
     if (data) {
       res.json({
-        '_id': data['_id'],
         username: data.username,
-        date: exerciseDate.toDateString(),
-        duration,
         description,
+        duration,
+        date: exerciseDate.toDateString(),
+        '_id': data['_id'],
       })
     }
   })
